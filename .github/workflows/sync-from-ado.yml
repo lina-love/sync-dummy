@@ -13,7 +13,8 @@ jobs:
       - name: Mirror ADO to GitHub
         uses: wearerequired/git-mirror-action@v1
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          GIT_USERNAME: ${{ secrets.ADO_USERNAME }}
+          GIT_PASSWORD: ${{ secrets.ADO_PAT }}
         with:
-          source-repo: "https://${{ secrets.ADO_USERNAME }}:${{ secrets.ADO_PAT }}@devops.iucon-dev.com/tfs/DefaultCollection/MANZ%20Website/_git/sync-dummy"
+          source-repo: "https://devops.iucon-dev.com/tfs/DefaultCollection/MANZ%20Website/_git/sync-dummy"
           destination-repo: "git@github.com:lina-love/sync-dummy.git"
