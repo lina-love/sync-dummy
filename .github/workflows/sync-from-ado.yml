@@ -7,16 +7,27 @@ on:
 
 jobs:
   sync:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Sync from Azure DevOps to GitHub
+        env:
+          ADO_PAT: ${{ secrets.ADO_PAT }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git clone --mirror "https://mahmoud.kinawy:${{ secrets.ADO_PAT }}@devops.iucon-dev.com/tfs/DefaultCollection/MANZ%20Website/_git/sync-dummy" repo
+          # Configure git to use Basic auth header for on-prem ADO
+          $encoded = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($env:ADO_PAT)"))
+          
+          git -c http.extraHeader="Authorization: Basic $encoded" `
+              -c http.sslVerify=false `
+              clone --mirror `
+              "https://devops.iucon-dev.com/tfs/DefaultCollection/MANZ%20Website/_git/sync-dummy" `
+              repo
 
           cd repo
 
-          git push --mirror "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/lina-love/sync-dummy.git" --force
+          git push --mirror "https://x-access-token:$($env:GH_TOKEN)@github.com/lina-love/sync-dummy.git" --force
 
-      - name: Done
-        run: echo "Sync complete"
+      - name: Cleanup
+        if: always()
+        run: Remove-Item -Recurse -Force repo -ErrorAction SilentlyContinue
