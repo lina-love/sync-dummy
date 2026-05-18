@@ -7,27 +7,13 @@ on:
 
 jobs:
   sync:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Sync from Azure DevOps to GitHub
+      - name: Mirror ADO to GitHub
+        uses: wearerequired/git-mirror-action@v1
         env:
-          ADO_PAT: ${{ secrets.ADO_PAT }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Configure git to use Basic auth header for on-prem ADO
-          $encoded = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($env:ADO_PAT)"))
-          
-          git -c http.extraHeader="Authorization: Basic $encoded" `
-              -c http.sslVerify=false `
-              clone --mirror `
-              "https://devops.iucon-dev.com/tfs/DefaultCollection/MANZ%20Website/_git/sync-dummy" `
-              repo
-
-          cd repo
-
-          git push --mirror "https://x-access-token:$($env:GH_TOKEN)@github.com/lina-love/sync-dummy.git" --force
-
-      - name: Cleanup
-        if: always()
-        run: Remove-Item -Recurse -Force repo -ErrorAction SilentlyContinue
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        with:
+          source: "https://x-token-auth:${{ secrets.ADO_PAT }}@devops.iucon-dev.com/tfs/DefaultCollection/MANZ%20Website/_git/sync-dummy"
+          destination: "git@github.com:lina-love/sync-dummy.git"
