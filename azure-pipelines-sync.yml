@@ -1,0 +1,41 @@
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+      - 'feature/*'
+      - 'release/*'
+
+schedules:
+  - cron: '0 */6 * * *'
+    displayName: Scheduled sync
+    branches:
+      include: ['*']
+    always: true
+
+pool:
+  name: Net7_Pool
+
+variables:
+  GITHUB_PAT: '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' 
+  GITHUB_REPO_URL: 'https://$(GITHUB_PAT)@github.com/lina-love/sync-dummy.git'
+
+steps:
+  - checkout: self
+    fetchDepth: 0
+    persistCredentials: true
+
+  - script: |
+      git config user.email "mahmoud.kinawy@iucon.com.eg"
+      git config user.name  "mahmoud.kinawy"
+    displayName: Configure git identity
+
+  - script: |
+      git remote get-url github >nul 2>&1 && (
+        git remote set-url github "$(GITHUB_REPO_URL)"
+      ) || (
+        git remote add github "$(GITHUB_REPO_URL)"
+      )
+
+      git push github --mirror --force
+    displayName: Mirror to GitHub
