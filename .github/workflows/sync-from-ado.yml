@@ -15,5 +15,5 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         with:
-          source-repo: "https://x-token-auth:${{ secrets.ADO_PAT }}@devops.iucon-dev.com/tfs/DefaultCollection/MANZ%20Website/_git/sync-dummy"
+          source-repo: "https://ado:${{ secrets.ADO_PAT }}@devops.iucon-dev.com/tfs/DefaultCollection/MANZ%20Website/_git/sync-dummy"
           destination-repo: "git@github.com:lina-love/sync-dummy.git"
