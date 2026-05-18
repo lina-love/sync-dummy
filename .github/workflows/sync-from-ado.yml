@@ -7,13 +7,13 @@ on:
 
 jobs:
   sync:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Clone from ADO
         run: |
           rm -rf repo.git
-          git clone --mirror "https://${{ secrets.ADO_USERNAME }}:${{ secrets.ADO_PAT }}@devops.iucon-dev.com/tfs/DefaultCollection/MANZ%20Website/_git/sync-dummy" repo.git
+          git clone --mirror "https://${{ secrets.ADO_USERNAME }}:${{ secrets.ADO_PAT }}@devops.iucon-dev.com/tfs/DefaultCollection/MANZ%20Website/_git/sync-dummy:443" repo.git
 
       - name: Push to GitHub
         run: |
