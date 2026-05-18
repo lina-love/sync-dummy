@@ -12,6 +12,6 @@ jobs:
     steps:
         - uses: yesolutions/mirror-action@master
           with:
-            REMOTE: 'https://devops.iucon-dev.com/tfs/DefaultCollection/MANZ%20Website/_git/sync-dummy'
-            GIT_USERNAME: ${{ secrets.ADO_USERNAME }}
-            GIT_PASSWORD: ${{ secrets.ADO_PAT }}
+            REMOTE: git@devops.iucon-dev.com:22/tfs/DefaultCollection/MANZ%20Website/_git/sync-dummy.git
+            GIT_SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+            GIT_SSH_NO_VERIFY_HOST: "true"
