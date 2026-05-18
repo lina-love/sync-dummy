@@ -17,7 +17,6 @@ pool:
   name: Net7_Pool
 
 variables:
-  GITHUB_PAT: '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' 
   GITHUB_REPO_URL: 'https://$(GITHUB_PAT)@github.com/lina-love/sync-dummy.git'
 
 steps:
@@ -39,3 +38,5 @@ steps:
 
       git push github --mirror --force
     displayName: Mirror to GitHub
+    env:
+      GITHUB_PAT: $(GITHUB_PAT)
